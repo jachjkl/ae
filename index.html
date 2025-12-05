@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AE Master Class</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              ae: {
+                dark: '#0f0f0f',
+                panel: '#1f1f1f',
+                header: '#181818',
+                blue: '#9999ff',
+                accent: '#0078d7',
+                cyan: '#58c4dc',
+                text: '#e6e6e6'
+              }
+            },
+            fontFamily: {
+              mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', "Liberation Mono", "Courier New", 'monospace'],
+            },
+            animation: {
+              'fade-in': 'fadeIn 0.5s ease-out',
+            },
+            keyframes: {
+              fadeIn: {
+                '0%': { opacity: '0', transform: 'translateY(10px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar { width: 8px; height: 8px; }
+      ::-webkit-scrollbar-track { background: #141414; }
+      ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+      ::-webkit-scrollbar-thumb:hover { background: #555; }
+      body { background-color: #0f0f0f; color: #e6e6e6; }
+
+      /* ================= VIZ ENGINE (Ported) ================= */
+      .viz-container {
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #080808;
+      }
+
+      .obj { width: 30px; height: 30px; background: #58c4dc; border-radius: 3px; position: absolute; }
+      
+      /* 1. Counter */
+      .v-counter { font-family: monospace; font-size: 24px; color: #58c4dc; position: relative; }
+      .v-counter::after { content: "0.00"; animation: count-up 3s infinite steps(10); }
+      @keyframes count-up { 0% { content: "0.00"; } 20% { content: "1.25"; } 40% { content: "5.50"; } 60% { content: "8.99"; } 80% { content: "12.0"; } 100% { content: "15.5"; } }
+
+      /* 2. Timeline */
+      .v-timeline { width: 90%; height: 6px; background: #333; border-radius: 3px; position: relative; }
+      .v-timeline-bar { position: absolute; left: 20%; width: 40%; height: 100%; background: #58c4dc; opacity: 0.5; animation: time-slide 3s infinite alternate; }
+      .v-timeline-cursor { width: 2px; height: 20px; background: #fff; position: absolute; top: -7px; left: 0; animation: cursor-move 3s infinite linear; }
+      @keyframes cursor-move { 0% { left: 0; } 100% { left: 100%; } }
+      @keyframes time-slide { 0% { left: 10%; width: 30%; } 100% { left: 30%; width: 60%; } }
+
+      /* 3. Console */
+      .v-console { width: 80%; height: 60%; background: #111; border: 1px solid #333; padding: 5px; font-family: monospace; font-size: 10px; color: #666; display: flex; flex-direction: column; gap: 2px; }
+      .v-console-line { width: 0; height: 8px; background: #444; animation: type-line 1s infinite steps(4); }
+      .v-console-line:nth-child(2) { width: 0; animation-delay: 0.5s; background: #58c4dc; }
+      @keyframes type-line { 0% { width: 0; } 100% { width: 80%; } }
+
+      /* 4. Focus */
+      .v-focus { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; position: relative; }
+      .focus-circle { width: 40px; height: 40px; border: 2px solid #58c4dc; border-radius: 50%; animation: focus-anim 2s infinite alternate; }
+      .focus-blur { position: absolute; width: 100%; height: 100%; background: rgba(0,0,0,0.5); animation: blur-anim 2s infinite alternate; backdrop-filter: blur(0px); }
+      @keyframes focus-anim { 0% { width: 40px; height: 40px; opacity: 1; } 100% { width: 60px; height: 60px; opacity: 0.2; } }
+      @keyframes blur-anim { 0% { backdrop-filter: blur(0px); opacity: 0; } 100% { backdrop-filter: blur(5px); opacity: 1; } }
+
+      /* 5. Particles */
+      .v-part { width: 100%; height: 100%; position: relative; overflow: hidden; }
+      .dot { width: 4px; height: 4px; background: #58c4dc; position: absolute; border-radius: 50%; animation: particle-fly 1.5s infinite linear; }
+      @keyframes particle-fly { 0% { opacity:1; transform:translate(0,0); } 100% { opacity:0; transform:translate(var(--tx), var(--ty)); } }
+
+      /* Standard */
+      .v-loop-cycle .obj { animation: loop-cycle 2s infinite linear; }
+      @keyframes loop-cycle { 0% { left: 10%; } 100% { left: 90%; } }
+      .v-text { font-weight: bold; font-size: 20px; color: #58c4dc; animation: text-anim 3s infinite; }
+      @keyframes text-anim { 0%,100% { font-size: 20px; } 50% { font-size: 30px; color: #fff; } }
+      .v-wiggle .obj { animation: wig 2s infinite ease-in-out; }
+      @keyframes wig { 0%,100%{transform:translate(0,0)} 25%{transform:translate(4px,-4px)} 50%{transform:translate(-4px,4px)} }
+      .v-graph { width: 100%; height: 100%; display: flex; align-items: flex-end; padding: 20px; gap: 5px; }
+      .bar { width: 20%; background: #333; animation: bar-up 2s infinite alternate; }
+      .bar:nth-child(2) { animation-delay: 0.2s; background: #58c4dc; }
+      @keyframes bar-up { from{height: 20%;} to{height: 80%;} }
+      .v-split-anim { width: 60px; height: 8px; background: #333; position: relative; }
+      .v-split-anim::before { content:''; position:absolute; width:50%; height:100%; left:0; background: #58c4dc; animation: split-move 2s infinite; }
+      @keyframes split-move { 50% { transform: translateY(-5px); } }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/",
+    "react/": "https://aistudiocdn.com/react@^19.2.1/",
+    "react": "https://aistudiocdn.com/react@^19.2.1",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.31.0"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
